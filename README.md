@@ -94,10 +94,6 @@ To avoid web UI timeouts and ensure metadata integrity during initial bulk uploa
 * **Resource Optimization:** Reduces CPU/RAM overhead on the Raspberry Pi during mass ingestion compared to web uploads.
 * **Deduplication:** Prevents re-uploading duplicate assets if a migration job is interrupted.
 
----
-
-### Common Usage Commands
-
 Run these commands from your laptop terminal where the photo archives reside:
 
 #### 1. Google Photos Takeout Migration
@@ -108,7 +104,9 @@ Run these commands from your laptop terminal where the photo archives reside:
   path/to/takeout-*.zip
 
 ### Updating Immich
-
+```
+---
+### Other Server Update Commands
 #### 1. Server Update (Raspberry Pi)
 ```bash
 cd ~/immich-app
