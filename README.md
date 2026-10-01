@@ -41,14 +41,14 @@ A hybrid self-hosted Immich deployment designed to keep storage and core server 
 ## Infrastructure & Configuration
 
 ### 1. Host Machine (Raspberry Pi 4B)
-* **OS / Network:** Raspberry Pi OS connected to a private Tailnet via **Tailscale**.
+* **OS / Network:** [Raspberry Pi OS Lite](https://www.raspberrypi.com/software/operating-systems/) connected to a private Tailnet via [**Tailscale**](https://tailscale.com/).
 * **Storage Partitioning:**
-  * **1 TB Dedicated Media Drive:** Displays as **~915 GiB usable** in Linux due to binary system measurement ($1\text{ TB} \approx 931\text{ GiB}$) and `ext4` filesystem overhead/inodes.
+  * **1 TB Dedicated Media Drive:** Displays as **~915 GiB usable** in Linux due to binary system measurement ($1\text{ TB} \approx 931\text{ GiB}$) and `ext4` filesystem overhead/inodes. A [Samsung 990 EVO Plus SSD](https://www.amazon.com/dp/B0DHLFWBQ1) plugged into a [UGREEN SSD Enclosure](https://www.amazon.com/dp/B09T97Z7DM) with a USB-A 3.0 connection to the Raspberry Pi.
   * **Optimized Reserved Blocks:** Reserved `ext4` blocks reduced from 5% to 1% to reclaim ~35–40 GB of space:
     ```bash
     sudo tune2fs -m 1 /dev/sdX1
     ```
-* **Immich Server Services:** Runs `immich-server`, `postgres`, and `redis` via Docker Compose. The local `immich-machine-learning` container is disabled or unused on the Pi.
+* [**Immich Server Services:**](https://immich.app/) Runs `immich-server`, `postgres`, and `redis` via Docker Compose. The local `immich-machine-learning` container is disabled or unused on the Pi.
 
 ### 2. Offloaded Machine Learning Worker (Windows Laptop)
 * **GPU Acceleration:** NVIDIA RTX 3060 utilized via Docker Desktop WSL2 backend.
@@ -84,6 +84,28 @@ Because the laptop is not running 24/7, Immich handles job scheduling dynamicall
 ---
 
 ## Maintenance & Operations Guide
+
+### Mass Ingestion & Bulk Imports ([`immich-go`](https://github.com/simulot/immich-go))
+
+To avoid web UI timeouts and ensure metadata integrity during initial bulk uploads (e.g., Google Takeout, iCloud, or large local photo directories), use **`immich-go`**.
+
+#### Key Advantages for this Setup
+* **Google Photos Takeout Matching:** Automatically parses `.json` metadata sidecars, restoring correct creation dates, GPS tags, descriptions, and album structures.
+* **Resource Optimization:** Reduces CPU/RAM overhead on the Raspberry Pi during mass ingestion compared to web uploads.
+* **Deduplication:** Prevents re-uploading duplicate assets if a migration job is interrupted.
+
+---
+
+### Common Usage Commands
+
+Run these commands from your laptop terminal where the photo archives reside:
+
+#### 1. Google Photos Takeout Migration
+```powershell
+.\immich-go upload from-google-photos `
+  --server="http://<PI-TAILSCALE-IP>:2283" `
+  --api-key="YOUR_IMMICH_API_KEY" `
+  path/to/takeout-*.zip
 
 ### Updating Immich
 
