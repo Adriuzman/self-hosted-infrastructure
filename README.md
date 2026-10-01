@@ -2,6 +2,8 @@
 
 A hybrid self-hosted Immich deployment designed to keep storage and core server operations running 24/7 on a **Raspberry Pi 4B**, while offloading heavy machine learning compute tasks (Smart Search, Face Detection/Recognition, and OCR) to a dedicated **Windows Laptop with an NVIDIA RTX 3060 GPU**.
 
+Inspiration for this project: [Ashpex](https://ashpex.net/)
+
 ---
 
 ## Architecture Overview
